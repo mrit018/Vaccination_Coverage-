@@ -9,7 +9,6 @@ import type {
   VillageFilter,
   SortKey,
   DataLoadingState,
-  DiseaseCode,
 } from '@/types/villageHealth';
 import {
   fetchAllVillageHealthData,

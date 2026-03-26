@@ -24,7 +24,6 @@ import {
 } from '@/utils/villageDataTransformers';
 import {
   validateVillageSummary,
-  validateDiseaseStatistics,
 } from '@/utils/villageHealthValidation';
 
 // ---------------------------------------------------------------------------
@@ -87,6 +86,8 @@ interface RawPopulationRow {
 
  interface RawDiseaseRow {
   village_id: number;
+  village_moo: string;
+  village_name: string;
   disease_code: string;
   disease_name: string;
   patient_count: number;
@@ -94,12 +95,19 @@ interface RawPopulationRow {
 
 interface RawScreeningRow {
   village_id: number;
+  village_moo: string;
+  village_name: string;
+  total_eligible: number;
+  dm_screened: number;
+  ht_screened: number;
   dm_coverage_percent: number | null;
   ht_coverage_percent: number | null;
 }
 
 interface RawComorbidityRow {
   village_id: number;
+  village_moo: string;
+  village_name: string;
   eye_complication: number;
   foot_complication: number;
   kidney_complication: number;

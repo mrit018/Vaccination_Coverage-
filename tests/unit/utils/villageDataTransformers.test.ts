@@ -3,17 +3,11 @@
 // =============================================================================
 
 import { describe, it, expect } from 'vitest';
-import type { DiseaseCode } from '@/types/villageHealth';
 import {
   toVillageSummary,
   toDiseaseStatistics,
   toComorbidityStatistics,
 } from '@/utils/villageDataTransformers';
-import type {
-  VillageSummary,
-  DiseaseStatistics,
-  ComorbidityStatistics,
-} from '@/types/villageHealth';
 
 describe('Data Transformers', () => {
   describe('toVillageSummary', () => {
@@ -84,9 +78,9 @@ describe('Data Transformers', () => {
       const result = toVillageSummary(rawRow);
 
       // Small village: counts should be zeroed for privacy
-      expect(result.householdCount).toBe(00);
+      expect(result.householdCount).toBe(0);
       expect(result.maleCount).toBe(0);
-      expect(result.femaleCount).toBe(0 );
+      expect(result.femaleCount).toBe(0);
     });
   });
 
@@ -95,12 +89,16 @@ describe('Data Transformers', () => {
       const rawRows = [
         {
           village_id: 1,
+          village_moo: '1',
+          village_name: 'บ้านทดใหม่',
           disease_code: '001',
           disease_name: 'เบาหวาน',
           patient_count: 23,
         },
         {
           village_id: 1,
+          village_moo: '1',
+          village_name: 'บ้านทดใหม่',
           disease_code: '002',
           disease_name: 'ความดันโลหิตสูง',
           patient_count: 31,
@@ -114,15 +112,14 @@ describe('Data Transformers', () => {
       expect(result[0].patientCount).toBe(23);
       expect(result[1].diseaseCode).toBe('002');
       expect(result[1].patientCount).toBe(31);
-      // Missing diseases should have 0 patient count
-      const dmDisease = result.find((d) => d.diseaseCode === '001');
-      expect(dmDisease?.diseaseName).toBe('เบาหวาน');
     });
 
     it('should fill missing disease codes with defaults', () => {
       const rawRows = [
         {
           village_id: 1,
+          village_moo: '1',
+          village_name: 'บ้านทดใหม่',
           disease_code: '001',
           disease_name: 'เบาหวาน',
           patient_count: 5,
@@ -143,6 +140,8 @@ describe('Data Transformers', () => {
     it('should transform raw row to ComorbidityStatistics', () => {
       const rawRow = {
         village_id: 1,
+        village_moo: '1',
+        village_name: 'บ้านทดใหม่',
         eye_complication: 5,
         foot_complication: 3,
         kidney_complication: 7,

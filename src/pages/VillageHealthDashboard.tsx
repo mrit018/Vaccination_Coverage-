@@ -3,29 +3,24 @@
 // =============================================================================
 
 import { useState, useCallback } from 'react';
-import { useBmsSession } from '@/hooks/useBmsSession';
+import { useBmsSessionContext } from '@/contexts/BmsSessionContext';
 import { useVillageHealth } from '@/hooks/useVillageHealth';
 import { VillageList } from '@/components/village/VillageList';
-import { AppHeader } from '@/components/layout/AppHeader';
 import { LoadingSpinner } from '@/components/layout/LoadingSpinner';
 import type { VillageHealthData } from '@/types/villageHealth';
 
-export function VillageHealthDashboard() {
-  const { config, sessionState, hospitalName, error: sessionError } = useBmsSession();
+export default function VillageHealthDashboard() {
+  const { session, sessionState, connectionConfig, error: sessionError } = useBmsSessionContext();
   const {
-    dataState,
     displayedVillages,
     filter,
-    sortBy,
-    sortOrder,
     error: villageError,
     isLoading,
     refetch,
     refresh,
     setFilter,
     resetFilter,
-    setSort,
-  } = useVillageHealth(config);
+  } = useVillageHealth(connectionConfig);
 
   const [selectedVillage, setSelectedVillage] = useState<VillageHealthData | null>(null);
 
@@ -38,11 +33,6 @@ export function VillageHealthDashboard() {
   const handleRetry = useCallback(() => {
     refetch();
   }, [refetch]);
-
-  // Handle refresh
-  const handleRefresh = useCallback(() => {
-    refresh();
-  }, [refresh]);
 
   // Render loading state
   if (sessionState === 'connecting') {
@@ -58,11 +48,11 @@ export function VillageHealthDashboard() {
     return (
       <div className="flex min-h-screen items-center justify-center p-4">
         <div className="text-center">
-          <h1 className="text-xl font-semibold text-destructive mb-2">เกิดข้อผิดพลเชื่อมต่อ</h1>
+          <h1 className="text-xl font-semibold text-red-600 mb-2">เกิดข้อผิดพลาดในการเชื่อมต่อ</h1>
           <p className="text-gray-600 mb-4">{sessionError.message}</p>
           <button
             onClick={() => window.location.reload()}
-            className="rounded-md bg-primary px-4 py-2 text-white"
+            className="rounded-md bg-blue-600 px-4 py-2 text-white"
           >
             ลองอีกครั้ง
           </button>
@@ -73,12 +63,18 @@ export function VillageHealthDashboard() {
 
   // Main dashboard render
   return (
-    <div className="min-h-screen bg-background">
-      <AppHeader
-        hospitalName={hospitalName}
-        pageTitle="แดชบอร์์สุขภาพหมู่บ้าน"
-        isLoading={isLoading}
-      />
+    <div className="min-h-screen bg-gray-50">
+      <header className="sticky top-0 z-10 flex h-14 items-center justify-between bg-white border-b px-6 shadow-sm">
+        <div>
+          <h1 className="text-lg font-semibold text-gray-900">
+            {session?.hospitalName || 'แดชบอร์ดสุขภาพหมู่บ้าน'}
+          </h1>
+          <p className="text-xs text-gray-500">ข้อมูลประชากรและสุขภาพหมู่บ้าน</p>
+        </div>
+        {isLoading && (
+          <span className="text-sm text-blue-600">กำลังโหลด...</span>
+        )}
+      </header>
 
       <main className="container mx-auto px-4 py-6">
         {/* Filter and controls section */}
@@ -95,12 +91,12 @@ export function VillageHealthDashboard() {
               onClick={resetFilter}
               className="rounded-md border border-gray-300 px-3 py-2 text-sm hover:bg-gray-50"
             >
-              รีเต็้มตั้งค่า
+              รีเซ็ตตั้งค่า
             </button>
             <button
-              onClick={handleRefresh}
+              onClick={refresh}
               disabled={isLoading}
-              className="rounded-md bg-primary px-3 py-2 text-sm text-white hover:bg-primary/90 disabled:opacity-50"
+              className="rounded-md bg-blue-600 px-3 py-2 text-sm text-white hover:bg-blue-700 disabled:opacity-50"
             >
               รีเฟรชข้อมูล
             </button>
@@ -123,17 +119,37 @@ export function VillageHealthDashboard() {
         {/* Selected village detail */}
         {selectedVillage && (
           <div className="mt-6 rounded-lg border border-gray-200 bg-white p-4">
-            <h2 className="text-lg font-semibold">
-              {selectedVillage.village.villageName}
-            </h2>
-            <pre className="text-sm text-gray-500">
-              {JSON.stringify(selectedVillage, null, 2)}
-            <button
-              onClick={() => setSelectedVillage(null)}
-              className="mt-4 rounded-md bg-gray-100 px-3 py-2 text-sm"
-            >
-              ปิด
-            </button>
+            <div className="flex justify-between items-start mb-4">
+              <h2 className="text-lg font-semibold">
+                {selectedVillage.village.villageName}
+              </h2>
+              <button
+                onClick={() => setSelectedVillage(null)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                ปิด
+              </button>
+            </div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+              <div>
+                <p className="text-gray-500">หมู่</p>
+                <p className="font-medium">{selectedVillage.village.villageMoo}</p>
+              </div>
+              <div>
+                <p className="text-gray-500">ประชากร</p>
+                <p className="font-medium">{selectedVillage.village.totalPopulation}</p>
+              </div>
+              <div>
+                <p className="text-gray-500">ครัวเรือน</p>
+                <p className="font-medium">{selectedVillage.village.householdCount}</p>
+              </div>
+              <div>
+                <p className="text-gray-500">โรคเรื้อรัง</p>
+                <p className="font-medium">
+                  {selectedVillage.diseases.reduce((sum, d) => sum + d.patientCount, 0)} คน
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </main>

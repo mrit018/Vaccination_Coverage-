@@ -3,7 +3,6 @@
 // =============================================================================
 
 import { describe, it, expect } from 'vitest';
-import type { DatabaseType } from '@/types';
 import {
   buildPopulationQuery,
   buildDiseaseQuery,

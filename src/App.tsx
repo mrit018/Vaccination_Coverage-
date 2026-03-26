@@ -9,10 +9,6 @@ const VaccinationCoverage = lazy(() => import('@/pages/VaccinationCoverage'))
 
 const VillageHealthDashboard = lazy(() => import('@/pages/VillageHealthDashboard'))
 
-const VillageHealthDashboard = lazy(() => import('@/pages/VaccinationCoverage'))
-
-const VillageHealthDashboard = lazy(() => import('@/pages/VillageHealthDashboard'))
-
 function AppRoutes() {
   return (
     <Suspense fallback={<LoadingSpinner size="lg" message="กำลังโหลดหน้า..." className="min-h-[50vh]" />}>

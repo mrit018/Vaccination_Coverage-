@@ -3,8 +3,8 @@
 // =============================================================================
 
 import type { VillageSummary } from '@/types/villageHealth';
-import { formatPopulationForDisplay } from '@/utils/villageDataTransformers';
-import { getVillageDisplayLabel } from '@/utils/villageDataTransformers';
+import { isSmallVillage } from '@/utils/villageHealthValidation';
+import { getVillageDisplayLabel, formatPopulationForDisplay } from '@/utils/villageDataTransformers';
 
 interface VillageCardProps {
   village: VillageSummary;
@@ -18,10 +18,11 @@ export function VillageCard({ village, onClick, className = '' }: VillageCardPro
 
   return (
     <div
-      onClick?.={className: `p-4 border rounded-lg bg-white shadow-sm hover:shadow-md cursor-pointer transition-shadow ${className}`}
+      onClick={onClick}
+      className={`p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow cursor-pointer ${className}`}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="flex items-center justify-between border-b border-gray-200 pb-3">
         <h3 className="text-lg font-semibold text-gray-900">
           {displayLabel}
         </h3>
@@ -51,20 +52,23 @@ export function VillageCard({ village, onClick, className = '' }: VillageCardPro
       {/* Demographics */}
       <div className="grid grid-cols-3 gap-2 mt-4 text-xs text-gray-600">
         <div className="text-center">
-          <p className="text-gray-500">ชาย 15-59</p>
+          <p className="text-gray-500">อายุ 0-14</p>
+          <p className="font-medium">{village.age0to14}</p>
+        </div>
+        <div className="text-center">
+          <p className="text-gray-500">อายุ 15-59</p>
           <p className="font-medium">{village.age15to59}</p>
         </div>
         <div className="text-center">
           <p className="text-gray-500">อายุ 60+</p>
           <p className="font-medium">{village.age60Plus}</p>
         </div>
-        <div className="text-center">
-          <p className="text-gray-500">เพศชาย/หญา</p>
-          <div className="flex justify-center gap-2">
-            <span className="text-blue-600">{village.maleCount}</span>
-            <span className="text-pink-600">{village.femaleCount}</span>
-          </div>
-        </div>
+      </div>
+
+      {/* Gender distribution */}
+      <div className="flex justify-center gap-4 mt-3 text-xs">
+        <span className="text-blue-600">ชาย {village.maleCount}</span>
+        <span className="text-pink-600">หญิง {village.femaleCount}</span>
       </div>
     </div>
   );

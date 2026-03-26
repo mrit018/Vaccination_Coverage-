@@ -45,7 +45,7 @@ export function buildPopulationQuery(dbType: DatabaseType = 'mysql'): string {
  * Build SQL query for chronic disease patient counts per village.
  * Returns counts for all 8 NCD types (DM, HT, COPD, Asthma, TB, CKD, Cancer, Psychiatry).
  */
-export function buildDiseaseQuery(dbType: DatabaseType = 'mysql'): string {
+export function buildDiseaseQuery(_dbType: DatabaseType = 'mysql'): string {
   return `
     SELECT
       v.village_id,
@@ -112,7 +112,7 @@ export function buildScreeningQuery(dbType: DatabaseType = 'mysql'): string {
  * Returns counts for eye, foot, kidney, cardiovascular, cerebrovascular,
  * peripheral vascular, and dental complications.
  */
-export function buildComorbidityQuery(dbType: DatabaseType = 'mysql'): string {
+export function buildComorbidityQuery(_dbType: DatabaseType = 'mysql'): string {
   return `
     SELECT
       v.village_id,
