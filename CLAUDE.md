@@ -87,6 +87,8 @@ This project uses the speckit system for structured development:
 ## Active Technologies
 - TypeScript 5.x (strict mode) + React 19 + Vite 6, Recharts 3.x, shadcn/ui, Tailwind CSS v4, TanStack Table v8, date-fns (001-bms-kpi-dashboard)
 - N/A (all data from BMS Session API; session cookie stored client-side) (001-bms-kpi-dashboard)
+- TypeScript 5.x (strict mode) + React 19, Vite 6, shadcn/ui, Recharts 3.x, TanStack Table v8, date-fns (001-village-health-dashboard)
+- HOSxP database (MySQL/MariaDB/PostgreSQL) accessed via BMS Session API (read-only) (001-village-health-dashboard)
 
 ## Recent Changes
 - 001-bms-kpi-dashboard: Added TypeScript 5.x (strict mode) + React 19 + Vite 6, Recharts 3.x, shadcn/ui, Tailwind CSS v4, TanStack Table v8, date-fns

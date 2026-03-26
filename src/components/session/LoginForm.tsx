@@ -8,7 +8,7 @@ interface LoginFormProps {
 }
 
 export function LoginForm({ onConnect, error, isConnecting }: LoginFormProps) {
-  const [sessionId, setSessionId] = useState('')
+  const [sessionId, setSessionId] = useState(__BMS_SESSION_ID__ || '')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
