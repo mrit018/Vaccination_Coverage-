@@ -44,13 +44,13 @@ This is a web application using the repository root structure:
 
 - [x] T001 [P] Create directory structure per plan.md: src/components/village/, src/services/, src/hooks/, src/types/, src/utils/, tests/unit/, tests/component/, tests/integration/, tests/api/
 - [x] T002 [P] [US1] Create TypeScript interfaces in src/types/villageHealth.ts (VillageSummary, DiseaseStatistics, ComorbidityStatistics, VillageHealthData, DashboardState)
-- [ ] T003 [P] [US1] Install and verify Recharts 3.x dependency for data visualizations
-- [ ] T004 [P] [US1] Install and verify TanStack Table v8 dependency for sortable/filterable tables
-- [ ] T005 [P] [US2] Create SQL query builder utilities in src/utils/sqlHelpers.ts (buildPopulationQuery, buildDiseaseQuery, buildScreeningQuery, buildComorbidityQuery)
-- [ ] T006 [P] [US2] Create data validation functions in src/utils/villageHealthValidation.ts (validateVillageSummary, validateDiseaseStatistics)
-- [ ] T007 [P] [US3] Create data transformation functions in src/utils/villageDataTransformers.ts (toVillageSummary, toDiseaseStatistics, toComorbidityStatistics)
-- [ ] T008 [P] [US4] Implement village health service in src/services/villageHealth.ts (fetchVillagePopulation, fetchDiseaseStatistics, fetchScreeningCoverage, fetchComorbidityStatistics)
-- [x] T009 [P] [US5] Create useVillageHealth hook in src/hooks/useVillageHealth.ts (data fetching, state management, error handling)
+- [X] T003 [P] [US1] Install and verify Recharts 3.x dependency for data visualizations
+- [X] T004 [P] [US1] Install and verify TanStack Table v8 dependency for sortable/filterable tables
+- [X] T005 [P] [US2] Create SQL query builder utilities in src/utils/sqlHelpers.ts (buildPopulationQuery, buildDiseaseQuery, buildScreeningQuery, buildComorbidityQuery)
+- [X] T006 [P] [US2] Create data validation functions in src/utils/villageHealthValidation.ts (validateVillageSummary, validateDiseaseStatistics)
+- [X] T007 [P] [US3] Create data transformation functions in src/utils/villageDataTransformers.ts (toVillageSummary, toDiseaseStatistics, toComorbidityStatistics)
+- [X] T008 [P] [US4] Implement village health service in src/services/villageHealth.ts (fetchVillagePopulation, fetchDiseaseStatistics, fetchScreeningCoverage, fetchComorbidityStatistics)
+- [X] T009 [P] [US5] Create useVillageHealth hook in src/hooks/useVillageHealth.ts (data fetching, state management, error handling)
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
