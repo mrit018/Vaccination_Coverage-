@@ -113,7 +113,7 @@ export default function VaccinationCoverage() {
                         tickLine={false}
                       />
                       <Tooltip
-                        formatter={(value) => [`${Number(value).toFixed(1)}%`, 'ความครอบคลุม']}
+                        formatter={(value) => [`${Number(value ?? 0).toFixed(1)}%`, 'ความครอบคลุม']}
                         contentStyle={{ borderRadius: '8px', border: '1px solid #e2e8f0' }}
                       />
                       <ReferenceLine x={90} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'top', value: 'Goal 90%', fill: '#ef4444', fontSize: 10 }} />
