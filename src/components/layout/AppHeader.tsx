@@ -12,6 +12,7 @@ import {
   Check,
   LogOut,
   Syringe,
+  Users,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -27,6 +28,7 @@ interface NavTab {
 
 const NAV_TABS: NavTab[] = [
   { label: 'ความครอบคลุมวัคซีน', path: '/', icon: Syringe },
+  { label: 'ประชากรหมู่บ้าน', path: '/village-health', icon: Users },
 ];
 
 // ---------------------------------------------------------------------------
