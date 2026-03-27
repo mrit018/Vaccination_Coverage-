@@ -8,6 +8,7 @@ import type {
   VillageSummary,
   DiseaseStatistics,
   ComorbidityStatistics,
+  ScreeningCoverage,
 } from '@/types/villageHealth';
 import { executeSqlViaApi } from '@/services/bmsSession';
 import {
@@ -115,6 +116,24 @@ interface RawComorbidityRow {
   cerebrovascular_complication: number;
   peripheral_vascular_complication: number;
   dental_complication: number;
+}
+
+// ---------------------------------------------------------------------------
+// Transformer functions
+// ---------------------------------------------------------------------------
+
+/**
+ * Transform raw screening row to ScreeningCoverage type
+ */
+function toScreeningCoverage(row: RawScreeningRow): ScreeningCoverage {
+  return {
+    villageId: row.village_id,
+    totalEligible: row.total_eligible ?? 0,
+    dmScreened: row.dm_screened ?? 0,
+    htScreened: row.ht_screened ?? 0,
+    dmCoveragePercent: row.dm_coverage_percent ?? 0,
+    htCoveragePercent: row.ht_coverage_percent ?? 0,
+  };
 }
 
 // ---------------------------------------------------------------------------
@@ -268,8 +287,13 @@ export async function fetchAllVillageHealthData(
   // Merge all data
   return villages.map((village) => {
     const diseases = diseaseMap.get(village.villageId) ?? [];
-    const screening = screeningMap.get(village.villageId);
+    const rawScreening = screeningMap.get(village.villageId);
     const comorbidities = comorbidityMap.get(village.villageId) ?? null;
+
+    // Transform raw screening data to ScreeningCoverage type
+    const screening: ScreeningCoverage | null = rawScreening
+      ? toScreeningCoverage(rawScreening)
+      : null;
 
     // Merge screening coverage into disease stats
     const diseasesWithScreening = screening
@@ -280,6 +304,7 @@ export async function fetchAllVillageHealthData(
       village,
       diseases: diseasesWithScreening,
       comorbidities,
+      screening,
     };
   });
 }

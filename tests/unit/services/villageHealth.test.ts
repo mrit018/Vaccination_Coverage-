@@ -45,12 +45,14 @@ describe('SQL Query Builders', () => {
   });
 
   describe('buildScreeningQuery', () => {
-    it('should generate valid SQL for screening coverage', () => {
+    it('should generate valid SQL for screening coverage using clinicmember proxy', () => {
       const sql = buildScreeningQuery('mysql');
 
       expect(sql).toContain('SELECT');
-      expect(sql).toContain('person_dm_screen_status');
-      expect(sql).toContain('person_ht_screen_status');
+      // Uses clinicmember as proxy since screening status tables may not exist
+      expect(sql).toContain('clinicmember');
+      expect(sql).toContain("clinic = '001'");
+      expect(sql).toContain("clinic = '002'");
     });
 
     it('should filter by age 15-59', () => {

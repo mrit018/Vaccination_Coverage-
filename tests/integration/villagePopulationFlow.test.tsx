@@ -6,7 +6,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { VillageHealthDashboard } from '@/pages/VillageHealthDashboard';
+import VillageHealthDashboard from '@/pages/VillageHealthDashboard';
 import * as bmsSessionModule from '@/services/bmsSession';
 import * as villageHealthModule from '@/services/villageHealth';
 
@@ -22,6 +22,7 @@ vi.mock('@/services/villageHealth', () => ({
   fetchDiseaseStatistics: vi.fn(),
   fetchScreeningCoverage: vi.fn(),
   fetchComorbidityStatistics: vi.fn(),
+  fetchAllVillageHealthData: vi.fn(),
 }));
 
 // Mock react-router-dom
@@ -29,6 +30,22 @@ const mockNavigate = vi.fn();
 vi.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate,
   useSearchParams: () => [new URLSearchParams('bms-session-id=test-session-id')],
+}));
+
+// Mock BmsSessionContext
+vi.mock('@/contexts/BmsSessionContext', () => ({
+  BmsSessionProvider: ({ children }: { children: React.ReactNode }) => children,
+  useBmsSessionContext: () => ({
+    session: {
+      bmsUrl: 'https://test.hosxp.net',
+      bmsSessionCode: 'test-jwt-token',
+      hospcode: '12345',
+      hospname: 'โรงพยาบาลทดสอบ',
+    },
+    isLoading: false,
+    error: null,
+    refreshSession: vi.fn(),
+  }),
 }));
 
 // Test wrapper with QueryClient
@@ -47,22 +64,29 @@ describe('Village Population Dashboard Integration', () => {
   beforeEach(() => {
     vi.clearAllMocks();
 
-    // Default successful mocks
+    // Default successful mocks with correct structure
     vi.mocked(bmsSessionModule.retrieveBmsSession).mockResolvedValue({
-      bms_url: 'https://test.hosxp.net',
-      bms_session_code: 'test-jwt-token',
-      hospcode: '12345',
-      hospname: 'โรงพยาบาลทดสอบ',
+      MessageCode: 200,
+      Message: 'Success',
+      RequestTime: new Date().toISOString(),
+      result: {
+        user_info: {
+          bms_url: 'https://test.hosxp.net',
+          bms_session_code: 'test-jwt-token',
+          hospital_code: '12345',
+          name: 'Test User',
+        },
+      },
     });
 
     vi.mocked(bmsSessionModule.extractConnectionConfig).mockReturnValue({
-      bmsUrl: 'https://test.hosxp.net',
-      bmsSessionCode: 'test-jwt-token',
-      hospcode: '12345',
-      hospname: 'โรงพยาบาลทดสอบ',
+      apiUrl: 'https://test.hosxp.net',
+      bearerToken: 'test-jwt-token',
+      databaseType: 'mysql',
+      appIdentifier: 'BMS.Dashboard.Test',
     });
 
-    vi.mocked(villageHealthModule.fetchVillagePopulation).mockResolvedValue([
+    vi.mocked(villageHealthModule.fetchAllVillageHealthData).mockResolvedValue([
       {
         village: {
           villageId: 1,
@@ -153,7 +177,7 @@ describe('Village Population Dashboard Integration', () => {
     });
 
     it('should display error message when village fetch fails', async () => {
-      vi.mocked(villageHealthModule.fetchVillagePopulation).mockRejectedValue(
+      vi.mocked(villageHealthModule.fetchAllVillageHealthData).mockRejectedValue(
         new Error('Database connection failed')
       );
 
@@ -165,7 +189,7 @@ describe('Village Population Dashboard Integration', () => {
     });
 
     it('should show retry button on error', async () => {
-      vi.mocked(villageHealthModule.fetchVillagePopulation).mockRejectedValue(
+      vi.mocked(villageHealthModule.fetchAllVillageHealthData).mockRejectedValue(
         new Error('Test error')
       );
 
@@ -177,7 +201,7 @@ describe('Village Population Dashboard Integration', () => {
     });
 
     it('should retry fetch when retry button is clicked', async () => {
-      vi.mocked(villageHealthModule.fetchVillagePopulation)
+      vi.mocked(villageHealthModule.fetchAllVillageHealthData)
         .mockRejectedValueOnce(new Error('First error'))
         .mockResolvedValueOnce([
           {
@@ -216,7 +240,7 @@ describe('Village Population Dashboard Integration', () => {
 
   describe('Empty State', () => {
     it('should display empty state when no villages found', async () => {
-      vi.mocked(villageHealthModule.fetchVillagePopulation).mockResolvedValue([]);
+      vi.mocked(villageHealthModule.fetchAllVillageHealthData).mockResolvedValue([]);
 
       render(<VillageHealthDashboard />, { wrapper: createWrapper() });
 
@@ -230,7 +254,7 @@ describe('Village Population Dashboard Integration', () => {
 
   describe('Out of Area Village', () => {
     it('should display "นอกเขต" badge for village moo 0', async () => {
-      vi.mocked(villageHealthModule.fetchVillagePopulation).mockResolvedValue([
+      vi.mocked(villageHealthModule.fetchAllVillageHealthData).mockResolvedValue([
         {
           village: {
             villageId: 0,
@@ -261,7 +285,7 @@ describe('Village Population Dashboard Integration', () => {
 
   describe('Privacy Protection', () => {
     it('should hide counts for small villages (<10 population)', async () => {
-      vi.mocked(villageHealthModule.fetchVillagePopulation).mockResolvedValue([
+      vi.mocked(villageHealthModule.fetchAllVillageHealthData).mockResolvedValue([
         {
           village: {
             villageId: 3,

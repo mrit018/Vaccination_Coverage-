@@ -104,7 +104,7 @@ describe('VillageCard Component', () => {
 
   describe('Privacy Protection', () => {
     it('should apply privacy styling for small villages', () => {
-      const { container } = render(<VillageCard village={smallVillage} />);
+      const { container: _container } = render(<VillageCard village={smallVillage} />);
 
       // Small village should still render but with privacy protection
       expect(screen.getByText(/บ้านเล็ก/)).toBeInTheDocument();

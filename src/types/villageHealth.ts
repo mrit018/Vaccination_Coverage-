@@ -69,11 +69,22 @@ export interface ComorbidityStatistics {
   dentalComplication: number;
 }
 
+/** DM/HT screening coverage for a village */
+export interface ScreeningCoverage {
+  villageId: number;
+  totalEligible: number;
+  dmScreened: number;
+  htScreened: number;
+  dmCoveragePercent: number;
+  htCoveragePercent: number;
+}
+
 /** Aggregated view combining all health data for a village */
 export interface VillageHealthData {
   village: VillageSummary;
   diseases: DiseaseStatistics[];
   comorbidities: ComorbidityStatistics | null;
+  screening: ScreeningCoverage | null;
 }
 
 // ---------------------------------------------------------------------------

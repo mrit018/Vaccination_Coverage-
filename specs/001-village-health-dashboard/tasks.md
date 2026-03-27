@@ -99,22 +99,22 @@ This is a web application using the repository root structure:
 
 ### Tests for User Story 2 (TDD - Write FIRST, ensure they FAIL)
 
-- [ ] T027 [P] [US2] Unit test for buildDiseaseQuery in tests/unit/services/villageHealth.test.ts
-- [ ] T028 [P] [US2] Unit test for buildScreeningQuery in tests/unit/services/villageHealth.test.ts
-- [ ] T029 [P] [US2] Unit test for toDiseaseStatistics transformer in tests/unit/utils/villageDataTransformers.test.ts
-- [ ] T030 [P] [US2] API contract test for disease statistics query in tests/api/villageHealthQueries.test.ts
-- [ ] T031 [P] [US2] Component test for HealthMetrics in tests/component/village/HealthMetrics.test.tsx
+- [X] T027 [P] [US2] Unit test for buildDiseaseQuery in tests/unit/services/villageHealth.test.ts
+- [X] T028 [P] [US2] Unit test for buildScreeningQuery in tests/unit/services/villageHealth.test.ts
+- [X] T029 [P] [US2] Unit test for toDiseaseStatistics transformer in tests/unit/utils/villageDataTransformers.test.ts
+- [X] T030 [P] [US2] API contract test for disease statistics query in tests/api/villageHealthQueries.test.ts
+- [X] T031 [P] [US2] Component test for HealthMetrics in tests/component/village/HealthMetrics.test.tsx
 - [ ] T032 [US2] Integration test for health statistics display in tests/integration/villageHealthFlow.test.tsx
 
 ### Implementation for User Story 2
 
-- [ ] T033 [P] [US2] Create HealthMetrics component in src/components/village/HealthMetrics.tsx (displays disease counts per village with disease names in Thai)
-- [ ] T034 [P] [US2] Create DiseaseChart component in src/components/village/DiseaseChart.tsx (bar chart showing disease counts across villages using Recharts)
-- [ ] T035 [P] [US2] Implement screening coverage display in HealthMetrics component (shows DM/HT screening percentages with visual indicators)
-- [ ] T036 [US2] Add color coding for high disease prevalence in HealthMetrics component (green=low, yellow=medium, red=high based on thresholds)
+- [X] T033 [P] [US2] Create HealthMetrics component in src/components/village/HealthMetrics.tsx (displays disease counts per village with disease names in Thai)
+- [X] T034 [P] [US2] Create DiseaseChart component in src/components/village/DiseaseChart.tsx (bar chart showing disease counts across villages using Recharts)
+- [X] T035 [P] [US2] Implement screening coverage display in HealthMetrics component (shows DM/HT screening percentages with visual indicators)
+- [X] T036 [US2] Add color coding for high disease prevalence in HealthMetrics component (green=low, yellow=medium, red=high based on thresholds)
 - [ ] T037 [US2] Integrate disease statistics into VillageCard component (shows disease summary badges/icons)
-- [ ] T038 [US2] Implement comorbidity statistics display in src/components/village/VillageDetail.tsx (shows eye, foot, kidney, cardiovascular, cerebrovascular, peripheral vascular, dental complications)
-- [ ] T039 [US2] Create VillageDetail expandable view in src/components/village/VillageDetail.tsx (drills down from VillageCard to show full health metrics)
+- [X] T038 [US2] Implement comorbidity statistics display in src/components/village/VillageDetail.tsx (shows eye, foot, kidney, cardiovascular, cerebrovascular, peripheral vascular, dental complications)
+- [X] T039 [US2] Create VillageDetail expandable view in src/components/village/VillageDetail.tsx (drills down from VillageCard to show full health metrics)
 - [ ] T040 [US2] Add last screening date display in VillageDetail component
 - [ ] T041 [US2] Update VillageList to support expand/collapse for VillageDetail view
 

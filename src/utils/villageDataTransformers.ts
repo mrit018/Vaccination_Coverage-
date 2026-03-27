@@ -7,6 +7,7 @@ import type {
   DiseaseStatistics,
   ComorbidityStatistics,
   DiseaseCode,
+  ScreeningCoverage,
 } from '@/types/villageHealth';
 import { DISEASE_CODE_MAP } from '@/types/villageHealth';
 import {
@@ -38,17 +39,6 @@ interface RawDiseaseResult {
   disease_code: string;
   disease_name: string;
   patient_count: number;
-}
-
-interface RawScreeningResult {
-  village_id: number;
-  village_moo: string;
-  village_name: string;
-  total_eligible: number;
-  dm_screened: number;
-  ht_screened: number;
-  dm_coverage_percent: number | null;
-  ht_coverage_percent: number | null;
 }
 
 interface RawComorbidityResult {
@@ -150,19 +140,19 @@ export function toDiseaseStatistic(row: RawDiseaseResult): DiseaseStatistics {
  */
 export function mergeScreeningCoverage(
   diseases: DiseaseStatistics[],
-  screeningRow: RawScreeningResult,
+  screening: ScreeningCoverage,
 ): DiseaseStatistics[] {
   return diseases.map((disease) => {
     if (disease.diseaseCode === '001') {
       return {
         ...disease,
-        screeningCoverage: screeningRow.dm_coverage_percent ?? 0,
+        screeningCoverage: screening.dmCoveragePercent ?? 0,
       };
     }
     if (disease.diseaseCode === '002') {
       return {
         ...disease,
-        screeningCoverage: screeningRow.ht_coverage_percent ?? 0,
+        screeningCoverage: screening.htCoveragePercent ?? 0,
       };
     }
     return disease;
