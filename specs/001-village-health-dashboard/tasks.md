@@ -112,11 +112,11 @@ This is a web application using the repository root structure:
 - [X] T034 [P] [US2] Create DiseaseChart component in src/components/village/DiseaseChart.tsx (bar chart showing disease counts across villages using Recharts)
 - [X] T035 [P] [US2] Implement screening coverage display in HealthMetrics component (shows DM/HT screening percentages with visual indicators)
 - [X] T036 [US2] Add color coding for high disease prevalence in HealthMetrics component (green=low, yellow=medium, red=high based on thresholds)
-- [ ] T037 [US2] Integrate disease statistics into VillageCard component (shows disease summary badges/icons)
+- [X] T037 [US2] Integrate disease statistics into VillageCard component (shows disease summary badges/icons)
 - [X] T038 [US2] Implement comorbidity statistics display in src/components/village/VillageDetail.tsx (shows eye, foot, kidney, cardiovascular, cerebrovascular, peripheral vascular, dental complications)
 - [X] T039 [US2] Create VillageDetail expandable view in src/components/village/VillageDetail.tsx (drills down from VillageCard to show full health metrics)
-- [ ] T040 [US2] Add last screening date display in VillageDetail component
-- [ ] T041 [US2] Update VillageList to support expand/collapse for VillageDetail view
+- [X] T040 [US2] Add last screening date display in VillageDetail component
+- [X] T041 [US2] Update VillageList to support expand/collapse for VillageDetail view
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently. Users can view population overview AND analyze health issues by village.
 

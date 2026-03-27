@@ -2,8 +2,10 @@
 // Village Health Population Dashboard - Village List Component
 // =============================================================================
 
+import { useState } from 'react';
 import type { VillageHealthData } from '@/types/villageHealth';
 import { VillageCard } from './VillageCard';
+import { VillageDetail } from './VillageDetail';
 import { LoadingSpinner } from '@/components/layout/LoadingSpinner';
 import { EmptyState } from '@/components/dashboard/EmptyState';
 
@@ -13,6 +15,7 @@ interface VillageListProps {
   error: Error | null;
   onRetry?: () => void;
   onVillageClick?: (village: VillageHealthData) => void;
+  showDetails?: boolean;
 }
 
 export function VillageList({
@@ -21,7 +24,10 @@ export function VillageList({
   error,
   onRetry,
   onVillageClick,
+  showDetails = false,
 }: VillageListProps) {
+  const [expandedVillageId, setExpandedVillageId] = useState<number | null>(null);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
@@ -57,15 +63,32 @@ export function VillageList({
     );
   }
 
+  const handleToggleExpand = (villageId: number) => {
+    setExpandedVillageId((prev) => (prev === villageId ? null : villageId));
+  };
+
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {villages.map((village) => (
-        <VillageCard
-          key={village.village.villageId}
-          village={village.village}
-          onClick={() => onVillageClick?.(village)}
-        />
-      ))}
+    <div className="space-y-4">
+      {villages.map((villageData) => {
+        const isExpanded = expandedVillageId === villageData.village.villageId;
+
+        return (
+          <div key={villageData.village.villageId} className="space-y-2">
+            <VillageCard
+              data={villageData}
+              onClick={() => onVillageClick?.(villageData)}
+              onExpand={showDetails ? () => handleToggleExpand(villageData.village.villageId) : undefined}
+              isExpanded={isExpanded}
+            />
+            {showDetails && isExpanded && (
+              <VillageDetail
+                data={villageData}
+                defaultExpanded={true}
+              />
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
