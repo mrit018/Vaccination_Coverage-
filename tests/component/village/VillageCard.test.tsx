@@ -108,10 +108,10 @@ describe('VillageCard Component', () => {
       expect(screen.queryByText('นอกเขต')).not.toBeInTheDocument();
     });
 
-    it('should show "(นอกเขต)" in label for out of area village', () => {
+    it('should show "(นอกเขต)" badge for out of area village', () => {
       render(<VillageCard data={outOfAreaVillageData} />);
 
-      expect(screen.getByText(/นอกเขตรับผิดชอบ/)).toBeInTheDocument();
+      expect(screen.getByText('นอกเขต')).toBeInTheDocument();
     });
   });
 

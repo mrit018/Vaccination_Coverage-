@@ -3,7 +3,7 @@
 // =============================================================================
 // Expandable view showing full health metrics for a village
 
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import type {
   VillageHealthData,
   ComorbidityStatistics,
@@ -49,35 +49,49 @@ function ComorbidityRow({ label, count }: ComorbidityRowProps) {
 // Main Component
 // ---------------------------------------------------------------------------
 
-export function VillageDetail({
+export const VillageDetail = memo(function VillageDetail({
   data,
   className,
   defaultExpanded = false,
 }: VillageDetailProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
-  const { diseases, comorbidities, screening } = data;
+  const { diseases, comorbidities, screening, village } = data;
+  const detailId = `village-detail-${village.villageId}`;
 
   return (
-    <div className={cn('mt-2', className)}>
+    <section
+      className={cn('mt-2', className)}
+      aria-labelledby={`village-detail-heading-${village.villageId}`}
+    >
+      <h4 id={`village-detail-heading-${village.villageId}`} className="sr-only">
+        รายละเอียดหมู่บ้าน {village.villageName}
+      </h4>
       <Button
         variant="ghost"
         size="sm"
         onClick={() => setIsExpanded(!isExpanded)}
         className="w-full justify-between"
+        aria-expanded={isExpanded}
+        aria-controls={detailId}
       >
         <span className="text-sm text-muted-foreground">
           {isExpanded ? 'ซ่อนรายละเอียด' : 'แสดงรายละเอียด'}
         </span>
         {isExpanded ? (
-          <ChevronUp className="h-4 w-4" />
+          <ChevronUp className="h-4 w-4" aria-hidden="true" />
         ) : (
-          <ChevronDown className="h-4 w-4" />
+          <ChevronDown className="h-4 w-4" aria-hidden="true" />
         )}
       </Button>
 
       {isExpanded && (
-        <div className="grid gap-4 mt-3 md:grid-cols-2">
+        <div
+          id={detailId}
+          className="grid gap-4 mt-3 md:grid-cols-2"
+          role="region"
+          aria-label="รายละเอียดสุขภาพหมู่บ้าน"
+        >
           {/* Disease Statistics */}
           <Card>
             <CardHeader className="pb-2">
@@ -117,9 +131,9 @@ export function VillageDetail({
           )}
         </div>
       )}
-    </div>
+    </section>
   );
-}
+});
 
 // ---------------------------------------------------------------------------
 // Comorbidity Section

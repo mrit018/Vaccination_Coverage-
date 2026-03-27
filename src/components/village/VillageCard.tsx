@@ -2,6 +2,7 @@
 // Village Health Population Dashboard - Village Card Component
 // =============================================================================
 
+import { memo } from 'react';
 import type { VillageHealthData, DiseaseStatistics } from '@/types/villageHealth';
 import { DISEASE_CODE_MAP } from '@/types/villageHealth';
 import { isSmallVillage } from '@/utils/villageHealthValidation';
@@ -26,7 +27,7 @@ function getTopDiseases(diseases: DiseaseStatistics[], limit: number = 3): Disea
     .slice(0, limit);
 }
 
-export function VillageCard({
+export const VillageCard = memo(function VillageCard({
   data,
   onClick,
   onExpand,
@@ -39,11 +40,20 @@ export function VillageCard({
   const topDiseases = getTopDiseases(diseases);
 
   return (
-    <div
+    <article
       className={`p-4 border rounded-lg bg-white shadow-sm hover:shadow-md transition-shadow ${
         onClick ? 'cursor-pointer' : ''
       } ${className}`}
       onClick={onClick}
+      role="button"
+      tabIndex={onClick ? 0 : undefined}
+      aria-label={`หมู่บ้าน ${displayLabel}, ประชากร ${village.totalPopulation} คน`}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
     >
       {/* Header */}
       <div className="flex items-center justify-between border-b border-gray-200 pb-3">
@@ -134,10 +144,12 @@ export function VillageCard({
             onExpand();
           }}
           className="mt-3 w-full text-center text-sm text-blue-600 hover:text-blue-800"
+          aria-expanded={isExpanded}
+          aria-controls={`village-detail-${data.village.villageId}`}
         >
           {isExpanded ? 'ซ่อนรายละเอียด' : 'แสดงรายละเอียด'}
         </button>
       )}
-    </div>
+    </article>
   );
-}
+});

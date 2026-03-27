@@ -104,7 +104,7 @@ This is a web application using the repository root structure:
 - [X] T029 [P] [US2] Unit test for toDiseaseStatistics transformer in tests/unit/utils/villageDataTransformers.test.ts
 - [X] T030 [P] [US2] API contract test for disease statistics query in tests/api/villageHealthQueries.test.ts
 - [X] T031 [P] [US2] Component test for HealthMetrics in tests/component/village/HealthMetrics.test.tsx
-- [ ] T032 [US2] Integration test for health statistics display in tests/integration/villageHealthFlow.test.tsx
+- [X] T032 [US2] Integration test for health statistics display in tests/integration/villageHealthFlow.test.tsx
 
 ### Implementation for User Story 2
 
@@ -130,9 +130,9 @@ This is a web application using the repository root structure:
 
 ### Tests for User Story 3 (TDD - Write FIRST, ensure they FAIL)
 
-- [ ] T042 [P] [US3] Unit test for filter/sort logic in tests/unit/hooks/useVillageHealth.test.ts
-- [ ] T043 [P] [US3] Component test for sortable/filterable table in tests/component/village/VillageTable.test.tsx
-- [ ] T044 [US3] Integration test for comparison mode in tests/integration/villageComparisonFlow.test.tsx
+- [X] T042 [P] [US3] Unit test for filter/sort logic in tests/unit/hooks/useVillageHealth.test.ts
+- [X] T043 [P] [US3] Component test for sortable/filterable table in tests/component/village/VillageTable.test.tsx
+- [X] T044 [US3] Integration test for comparison mode in tests/integration/villageComparisonFlow.test.tsx
 
 ### Implementation for User Story 3
 
@@ -154,19 +154,19 @@ This is a web application using the repository root structure:
 
 **Purpose**: Improvements that affect multiple user stories
 
-- [ ] T054 [P] Add comprehensive error logging in src/services/villageHealth.ts (log query failures, session errors, data inconsistencies)
-- [ ] T055 [P] Implement query result caching in src/hooks/useVillageHealth.ts (5-minute cache to balance freshness and performance)
-- [ ] T056 [P] Add accessibility attributes to all components (ARIA labels, keyboard navigation, screen reader support)
-- [ ] T057 [P] Add Thai language support with proper number/date formatting in src/utils/villageFormatters.ts
-- [ ] T058 Performance optimization - implement React.memo for VillageCard, VillageDetail components
-- [ ] T059 Performance optimization - add useMemo for chart data transformations in PopulationChart and DiseaseChart
-- [ ] T060 Add unit tests for data formatters in tests/unit/utils/villageFormatters.test.ts
-- [ ] T061 Add component tests for ComparisonView in tests/component/village/ComparisonView.test.tsx
-- [ ] T062 Add integration test for error recovery flows in tests/integration/villageErrorHandling.test.tsx
-- [ ] T063 Add API contract test for all query error scenarios in tests/api/villageHealthErrors.test.ts
-- [ ] T064 Run test suite and verify 80% code coverage minimum per Constitution Principle III
-- [ ] T065 Update CLAUDE.md with village health dashboard documentation
-- [ ] T066 Validate quickstart.md scenarios work as documented
+- [X] T054 [P] Add comprehensive error logging in src/services/villageHealth.ts (log query failures, session errors, data inconsistencies)
+- [X] T055 [P] Implement query result caching in src/hooks/useVillageHealth.ts (5-minute cache to balance freshness and performance)
+- [X] T056 [P] Add accessibility attributes to all components (ARIA labels, keyboard navigation, screen reader support)
+- [X] T057 [P] Add Thai language support with proper number/date formatting in src/utils/villageFormatters.ts
+- [X] T058 Performance optimization - implement React.memo for VillageCard, VillageDetail components
+- [X] T059 Performance optimization - add useMemo for chart data transformations in PopulationChart and DiseaseChart
+- [X] T060 Add unit tests for data formatters in tests/unit/utils/villageFormatters.test.ts
+- [X] T061 Add component tests for ComparisonView in tests/component/village/ComparisonView.test.tsx
+- [X] T062 Add integration test for error recovery flows in tests/integration/villageErrorHandling.test.tsx
+- [X] T063 Add API contract test for all query error scenarios in tests/api/villageHealthErrors.test.ts
+- [X] T064 Run test suite and verify 80% code coverage minimum per Constitution Principle III
+- [X] T065 Update CLAUDE.md with village health dashboard documentation
+- [X] T066 Validate quickstart.md scenarios work as documented
 
 ---
 

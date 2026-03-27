@@ -28,6 +28,49 @@ import {
 } from '@/utils/villageHealthValidation';
 
 // ---------------------------------------------------------------------------
+// Error Logging (T054)
+// ---------------------------------------------------------------------------
+
+type LogLevel = 'info' | 'warn' | 'error' | 'debug';
+
+interface LogEntry {
+  timestamp: string;
+  level: LogLevel;
+  component: string;
+  message: string;
+  data?: Record<string, unknown>;
+}
+
+/**
+ * Structured logging for village health data operations
+ */
+function log(level: LogLevel, message: string, data?: Record<string, unknown>): void {
+  const entry: LogEntry = {
+    timestamp: new Date().toISOString(),
+    level,
+    component: 'VillageHealthService',
+    message,
+    ...(data && { data }),
+  };
+
+  switch (level) {
+    case 'error':
+      console.error(JSON.stringify(entry));
+      break;
+    case 'warn':
+      console.warn(JSON.stringify(entry));
+      break;
+    case 'debug':
+      if (process.env.NODE_ENV === 'development') {
+        console.debug(JSON.stringify(entry));
+      }
+      break;
+    default:
+      console.log(JSON.stringify(entry));
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 
@@ -142,17 +185,35 @@ function toScreeningCoverage(row: RawScreeningRow): ScreeningCoverage {
 
 /**
  * Execute a SQL query and parse the response.
+ * Includes comprehensive error logging (T054).
  */
 async function executeQuery<T>(sql: string, config: ConnectionConfig): Promise<T[]> {
-  const response: SqlApiResponse = await executeSqlViaApi(sql, config);
+  log('debug', 'Executing SQL query', { sqlPreview: sql.substring(0, 100) + '...' });
 
-  if (response.MessageCode !== 200) {
-    throw new Error(
-      `SQL API returned HTTP ${response.MessageCode}. Please check the BMS service status and try again.`,
-    );
+  try {
+    const response: SqlApiResponse = await executeSqlViaApi(sql, config);
+
+    if (response.MessageCode !== 200) {
+      log('error', 'SQL API returned error', {
+        messageCode: response.MessageCode,
+        message: response.Message,
+      });
+      throw new Error(
+        `SQL API returned HTTP ${response.MessageCode}. Please check the BMS service status and try again.`,
+      );
+    }
+
+    const rowCount = response.data?.length ?? 0;
+    log('info', 'SQL query completed', { rowCount });
+
+    return (response.data ?? []) as T[];
+  } catch (error) {
+    log('error', 'SQL query execution failed', {
+      error: error instanceof Error ? error.message : String(error),
+      sqlPreview: sql.substring(0, 100),
+    });
+    throw error;
   }
-
-  return (response.data ?? []) as T[];
 }
 
  // ---------------------------------------------------------------------------
@@ -166,24 +227,40 @@ export async function fetchVillagePopulation(
   config: ConnectionConfig,
   dbType: DatabaseType = 'mysql',
 ): Promise<VillageSummary[]> {
+  log('info', 'Fetching village population data', { dbType });
+
   const cacheKey = `population-${dbType}`;
   const cached = getCached<VillageSummary[]>(cacheKey);
-  if (cached) return cached;
+  if (cached) {
+    log('debug', 'Returning cached population data', { villageCount: cached.length });
+    return cached;
+  }
 
-  const sql = buildPopulationQuery(dbType);
-  const rows = await executeQuery<RawPopulationRow>(sql, config);
+  try {
+    const sql = buildPopulationQuery(dbType);
+    const rows = await executeQuery<RawPopulationRow>(sql, config);
 
-  const villages = rows.map((row) => {
-    const summary = toVillageSummary(row);
-    const validation = validateVillageSummary(summary);
-    if (!validation.isValid) {
-      console.warn(`Validation warnings for village ${summary.villageId}:`, validation.errors);
-    }
-    return summary;
-  });
+    const villages = rows.map((row) => {
+      const summary = toVillageSummary(row);
+      const validation = validateVillageSummary(summary);
+      if (!validation.isValid) {
+        log('warn', `Village validation warnings`, {
+          villageId: summary.villageId,
+          errors: validation.errors,
+        });
+      }
+      return summary;
+    });
 
-  setCache(cacheKey, villages);
-  return villages;
+    log('info', 'Population data fetched successfully', { villageCount: villages.length });
+    setCache(cacheKey, villages);
+    return villages;
+  } catch (error) {
+    log('error', 'Failed to fetch village population', {
+      error: error instanceof Error ? error.message : String(error),
+    });
+    throw error;
+  }
 }
 
  /**

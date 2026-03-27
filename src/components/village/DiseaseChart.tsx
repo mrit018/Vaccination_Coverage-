@@ -3,6 +3,7 @@
 // =============================================================================
 // Bar chart showing disease counts across villages using Recharts
 
+import { useMemo } from 'react';
 import type { VillageSummary } from '@/types/villageHealth';
 import { DISEASE_CODE_MAP } from '@/types/villageHealth';
 import {
@@ -135,6 +136,22 @@ export function DiseaseChart({
   title = 'สถิติโรคเรื้อรังแยกตามหมู่บ้าน',
   height = 400,
 }: DiseaseChartProps) {
+  // Memoize disease codes list (T059)
+  const diseaseCodes = useMemo(
+    () => Object.keys(DISEASE_CODE_MAP),
+    []
+  );
+
+  // Memoize sorted data for consistent rendering (T059)
+  const sortedData = useMemo(
+    () => [...data].sort((a, b) => {
+      const aMoo = parseInt(a.villageMoo, 10) || 999;
+      const bMoo = parseInt(b.villageMoo, 10) || 999;
+      return aMoo - bMoo;
+    }),
+    [data]
+  );
+
   if (!data || data.length === 0) {
     return (
       <Card>
@@ -142,15 +159,17 @@ export function DiseaseChart({
           <CardTitle>{title}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-[200px] text-muted-foreground">
+          <div
+            className="flex items-center justify-center h-[200px] text-muted-foreground"
+            role="img"
+            aria-label="ไม่มีข้อมูลสถิติโรค"
+          >
             ไม่มีข้อมูลสถิติโรค
           </div>
         </CardContent>
       </Card>
     );
   }
-
-  const diseaseCodes = Object.keys(DISEASE_CODE_MAP);
 
   return (
     <Card>
@@ -160,7 +179,7 @@ export function DiseaseChart({
       <CardContent>
         <ResponsiveContainer width="100%" height={height}>
           <BarChart
-            data={data}
+            data={sortedData}
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />

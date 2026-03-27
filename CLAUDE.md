@@ -92,3 +92,114 @@ This project uses the speckit system for structured development:
 
 ## Recent Changes
 - 001-bms-kpi-dashboard: Added TypeScript 5.x (strict mode) + React 19 + Vite 6, Recharts 3.x, shadcn/ui, Tailwind CSS v4, TanStack Table v8, date-fns
+
+---
+
+## Feature: Village Health Population Dashboard
+
+**Feature ID**: `001-village-health-dashboard`
+**Status**: Production Ready
+
+### Overview
+
+A comprehensive dashboard displaying village-level population demographics and health statistics for HOSxP hospital systems. Designed for Thai healthcare workers (Village Health Volunteers - อสม.) to monitor population health across their service area.
+
+### Key Capabilities
+
+1. **Population Overview** (US1)
+   - Village-by-village population counts with household information
+   - Age group distribution (0-14, 15-59, 60+ years)
+   - Gender distribution (male/female counts)
+   - Privacy protection for small villages (<10 population)
+
+2. **Health Statistics** (US2)
+   - Chronic disease tracking: DM, HT, COPD, Asthma, TB, CKD, Cancer, Psychiatry
+   - Screening coverage percentages for DM and HT
+   - Comorbidity statistics (eye, foot, kidney, cardiovascular complications)
+   - Color-coded severity indicators (green/yellow/red)
+
+3. **Comparison & Prioritization** (US3)
+   - Sortable/filterable table view (TanStack Table v8)
+   - Side-by-side village comparison
+   - CSV/JSON export functionality
+   - Multi-village selection for focused analysis
+
+### Source Structure
+
+```
+src/
+├── components/village/
+│   ├── VillageCard.tsx         # Individual village summary card
+│   ├── VillageList.tsx         # Grid/list of village cards
+│   ├── VillageTable.tsx        # TanStack Table sortable/filterable
+│   ├── VillageDetail.tsx       # Expanded health metrics view
+│   ├── ComparisonView.tsx      # Side-by-side village comparison
+│   ├── HealthMetrics.tsx       # Disease count display with badges
+│   ├── PopulationChart.tsx     # Recharts pie/bar charts
+│   └── DiseaseChart.tsx        # Recharts bar chart for diseases
+├── services/villageHealth.ts   # Data fetching with caching
+├── hooks/useVillageHealth.ts   # React hook for state management
+├── utils/
+│   ├── sqlHelpers.ts           # SQL query builders
+│   ├── villageFormatters.ts    # Thai language formatters
+│   ├── villageDataTransformers.ts  # Data transformation
+│   ├── villageHealthValidation.ts  # Privacy protection
+│   └── villageExport.ts        # CSV/JSON export utilities
+├── types/villageHealth.ts      # TypeScript interfaces
+└── pages/VillageHealthDashboard.tsx  # Main page component
+
+tests/
+├── unit/
+│   ├── services/villageHealth.test.ts
+│   └── utils/villageFormatters.test.ts
+├── component/village/
+│   ├── VillageCard.test.tsx
+│   ├── VillageList.test.tsx
+│   └── ComparisonView.test.tsx
+├── integration/
+│   └── villageErrorHandling.test.tsx
+└── api/
+    ├── villageHealthQueries.test.ts
+    └── villageHealthErrors.test.ts
+```
+
+### HOSxP Database Tables Used
+
+| Table | Purpose |
+|-------|---------|
+| `village` | Village definitions (id, moo, name) |
+| `house` | Household information |
+| `person` | Individual person records |
+| `patient` | Patient data with HN |
+| `clinicmember` | Chronic disease clinic membership (DM/HT) |
+| `person_vaccine` | Vaccination records |
+| `ovst_vaccine` | Vaccine visit data |
+
+### Key Formatters (Thai Language)
+
+- **Buddhist Era Years**: `toBEYear(year)` adds 543 to Gregorian year
+- **Number formatting**: `formatNumber()` uses Thai locale (1,234,567)
+- **Population display**: Shows "ข้อมูลน้อยเกินไป" for villages <10 population
+- **Coverage labels**: "ครอบคลุม" (≥80%), "ปานกลาง" (60-79%), "ต้องปรับปรุง" (<60%)
+
+### Performance Optimizations
+
+- **React.memo**: VillageCard, VillageDetail components
+- **useMemo**: Chart data transformations, filtered/sorted lists
+- **Query caching**: 5-minute cache in villageHealth service
+- **Parallel queries**: Population, diseases, screening, comorbidities fetched concurrently
+
+### Accessibility Features
+
+- ARIA labels on all interactive elements
+- Keyboard navigation support
+- Screen reader compatible
+- Semantic HTML structure
+
+### Error Handling
+
+- Comprehensive structured logging (JSON format)
+- Actionable error messages with retry buttons
+- Graceful degradation for partial data failures
+- Network timeout handling (30s session, 60s query)
+
