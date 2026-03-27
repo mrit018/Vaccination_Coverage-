@@ -66,13 +66,13 @@ This is a web application using the repository root structure:
 
 > **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-- [ ] T010 [P] [US1] Unit test for buildPopulationQuery in tests/unit/services/villageHealth.test.ts
-- [ ] T011 [P] [US1] Unit test for toVillageSummary transformer in tests/unit/utils/villageDataTransformers.test.ts
-- [ ] T012 [P] [US1] Unit test for validateVillageSummary in tests/unit/utils/villageHealthValidation.test.ts
-- [ ] T013 [P] [US1] API contract test for population query in tests/api/villageHealthQueries.test.ts
-- [ ] T014 [P] [US1] Component test for VillageCard in tests/component/village/VillageCard.test.tsx
-- [ ] T015 [P] [US1] Component test for VillageList in tests/component/village/VillageList.test.tsx
-- [ ] T016 [US1] Integration test for population dashboard flow in tests/integration/villagePopulationFlow.test.tsx
+- [X] T010 [P] [US1] Unit test for buildPopulationQuery in tests/unit/services/villageHealth.test.ts
+- [X] T011 [P] [US1] Unit test for toVillageSummary transformer in tests/unit/utils/villageDataTransformers.test.ts
+- [X] T012 [P] [US1] Unit test for validateVillageSummary in tests/unit/utils/villageHealthValidation.test.ts
+- [X] T013 [P] [US1] API contract test for population query in tests/api/villageHealthQueries.test.ts
+- [X] T014 [P] [US1] Component test for VillageCard in tests/component/village/VillageCard.test.tsx
+- [X] T015 [P] [US1] Component test for VillageList in tests/component/village/VillageList.test.tsx
+- [X] T016 [US1] Integration test for population dashboard flow in tests/integration/villagePopulationFlow.test.tsx
 
 ### Implementation for User Story 1
 
@@ -81,11 +81,11 @@ This is a web application using the repository root structure:
 - [X] T019 [US1] Create VillageList component in src/components/village/VillageList.tsx (renders list of VillageCard components, handles loading/error states)
 - [X] T020 [US1] Create VillageHealthDashboard page in src/pages/VillageHealthDashboard.tsx (main page component, integrates VillageList, handles BMS Session authentication)
 - [X] T021 [US1] Add route configuration for /village-health in routing setup
-- [ ] T022 [US1] Implement privacy protection for small villages (<10 population) in src/utils/villageDataTransformers.ts (replace counts with "ข้อมูลน้อยเกินไป")
-- [ ] T023 [US1] Add loading states with skeleton screens in VillageList component
-- [ ] T024 [US1] Add error states with actionable messages and retry button in VillageList component
-- [ ] T025 [US1] Add empty state with guidance when no villages found in VillageList component
-- [ ] T026 [US1] Mark village "0" as "Out of Area" with visual distinction (badge/icon) in VillageCard component
+- [X] T022 [US1] Implement privacy protection for small villages (<10 population) in src/utils/villageDataTransformers.ts (replace counts with "ข้อมูลน้อยเกินไป")
+- [X] T023 [US1] Add loading states with skeleton screens in VillageList component
+- [X] T024 [US1] Add error states with actionable messages and retry button in VillageList component
+- [X] T025 [US1] Add empty state with guidance when no villages found in VillageList component
+- [X] T026 [US1] Mark village "0" as "Out of Area" with visual distinction (badge/icon) in VillageCard component
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently. Users can view village population overview with demographics.
 
