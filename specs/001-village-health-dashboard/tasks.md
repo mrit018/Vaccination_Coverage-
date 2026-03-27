@@ -136,15 +136,15 @@ This is a web application using the repository root structure:
 
 ### Implementation for User Story 3
 
-- [ ] T045 [P] [US3] Create VillageTable component in src/components/village/VillageTable.tsx (sortable/filterable table using TanStack Table v8)
-- [ ] T046 [P] [US3] Implement sorting functionality in VillageTable component (sort by population, disease count, screening coverage, etc.)
-- [ ] T047 [P] [US3] Implement filtering functionality in VillageTable component (filter by disease type, min screening coverage, population range)
-- [ ] T048 [P] [US3] Add sort indicators to VillageTable columns (show current sort field and direction)
-- [ ] T049 [US3] Create ComparisonView component in src/components/village/ComparisonView.tsx (side-by-side comparison of selected villages)
+- [X] T045 [P] [US3] Create VillageTable component in src/components/village/VillageTable.tsx (sortable/filterable table using TanStack Table v8)
+- [X] T046 [P] [US3] Implement sorting functionality in VillageTable component (sort by population, disease count, screening coverage, etc.)
+- [X] T047 [P] [US3] Implement filtering functionality in VillageTable component (filter by disease type, min screening coverage, population range)
+- [X] T048 [P] [US3] Add sort indicators to VillageTable columns (show current sort field and direction)
+- [X] T049 [US3] Create ComparisonView component in src/components/village/ComparisonView.tsx (side-by-side comparison of selected villages)
 - [ ] T050 [US3] Add village selection mechanism (checkboxes/multi-select) in VillageList and VillageTable
 - [ ] T051 [US3] Implement comparison mode toggle in VillageHealthDashboard page (switches between list and comparison views)
-- [ ] T052 [US3] Add export functionality in src/utils/villageExport.ts (export village health summary to CSV/PDF)
-- [ ] T053 [US3] Add print-friendly styling for village health reports
+- [X] T052 [US3] Add export functionality in src/utils/villageExport.ts (export village health summary to CSV/PDF)
+- [X] T053 [US3] Add print-friendly styling for village health reports
 
 **Checkpoint**: All user stories should now be independently functional. Users can compare villages and identify priorities.
 
