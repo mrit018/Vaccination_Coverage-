@@ -2,12 +2,20 @@
 // Village Health Population Dashboard - Dashboard Page Component
 // =============================================================================
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { useBmsSessionContext } from '@/contexts/BmsSessionContext';
 import { useVillageHealth } from '@/hooks/useVillageHealth';
 import { VillageList } from '@/components/village/VillageList';
+import { VillageTable } from '@/components/village/VillageTable';
+import { ComparisonView } from '@/components/village/ComparisonView';
+import { VillageDetail } from '@/components/village/VillageDetail';
 import { LoadingSpinner } from '@/components/layout/LoadingSpinner';
+import { Button } from '@/components/ui/button';
+import { downloadCSV } from '@/utils/villageExport';
 import type { VillageHealthData } from '@/types/villageHealth';
+import { LayoutGrid, Table, GitCompare, Download } from 'lucide-react';
+
+type ViewMode = 'cards' | 'table' | 'comparison';
 
 export default function VillageHealthDashboard() {
   const { session, sessionState, connectionConfig, error: sessionError } = useBmsSessionContext();
@@ -22,7 +30,9 @@ export default function VillageHealthDashboard() {
     resetFilter,
   } = useVillageHealth(connectionConfig);
 
+  const [viewMode, setViewMode] = useState<ViewMode>('cards');
   const [selectedVillage, setSelectedVillage] = useState<VillageHealthData | null>(null);
+  const [selectedForComparison, setSelectedForComparison] = useState<Set<number>>(new Set());
 
   // Handle village click
   const handleVillageClick = useCallback((village: VillageHealthData) => {
@@ -33,6 +43,38 @@ export default function VillageHealthDashboard() {
   const handleRetry = useCallback(() => {
     refetch();
   }, [refetch]);
+
+  // Remove village from comparison
+  const handleRemoveFromComparison = useCallback((villageId: number) => {
+    setSelectedForComparison((prev) => {
+      const newSet = new Set(prev);
+      newSet.delete(villageId);
+      return newSet;
+    });
+  }, []);
+
+  // Clear all comparison selections
+  const clearComparisonSelection = useCallback(() => {
+    setSelectedForComparison(new Set());
+  }, []);
+
+  // Get villages selected for comparison
+  const comparisonVillages = useMemo(() => {
+    return displayedVillages.filter((v) => selectedForComparison.has(v.village.villageId));
+  }, [displayedVillages, selectedForComparison]);
+
+  // Handle export
+  const handleExport = useCallback((selectedIds?: number[]) => {
+    const villagesToExport = selectedIds
+      ? displayedVillages.filter((v) => selectedIds.includes(v.village.villageId))
+      : displayedVillages;
+
+    downloadCSV(villagesToExport, {
+      includeDiseases: true,
+      includeScreening: true,
+      includeComorbidities: true,
+    });
+  }, [displayedVillages]);
 
   // Render loading state
   if (sessionState === 'connecting') {
@@ -102,54 +144,111 @@ export default function VillageHealthDashboard() {
             </button>
           </div>
 
-          <div className="text-sm text-gray-500">
-            {displayedVillages.length} หมู่บ้าน
+          <div className="flex items-center gap-2">
+            {/* View mode toggle */}
+            <div className="flex rounded-lg border border-gray-300 overflow-hidden">
+              <button
+                onClick={() => setViewMode('cards')}
+                className={`px-3 py-2 text-sm ${viewMode === 'cards' ? 'bg-blue-600 text-white' : 'bg-white hover:bg-gray-50'}`}
+                title="มุมมองการ์ด"
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('table')}
+                className={`px-3 py-2 text-sm border-l border-gray-300 ${viewMode === 'table' ? 'bg-blue-600 text-white' : 'bg-white hover:bg-gray-50'}`}
+                title="มุมมองตาราง"
+              >
+                <Table className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode('comparison')}
+                className={`px-3 py-2 text-sm border-l border-gray-300 ${viewMode === 'comparison' ? 'bg-blue-600 text-white' : 'bg-white hover:bg-gray-50'}`}
+                title="เปรียบเทียบ"
+              >
+                <GitCompare className="h-4 w-4" />
+              </button>
+            </div>
+
+            {/* Export button */}
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => handleExport()}
+            >
+              <Download className="h-4 w-4 mr-2" />
+              ส่งออก
+            </Button>
+
+            <div className="text-sm text-gray-500">
+              {displayedVillages.length} หมู่บ้าน
+              {selectedForComparison.size > 0 && ` | เลือก ${selectedForComparison.size}`}
+            </div>
           </div>
         </div>
 
-        {/* Village list */}
-        <VillageList
-          villages={displayedVillages}
-          isLoading={isLoading}
-          error={villageError}
-          onRetry={handleRetry}
-          onVillageClick={handleVillageClick}
-        />
+        {/* Main content based on view mode */}
+        {viewMode === 'cards' && (
+          <VillageList
+            villages={displayedVillages}
+            isLoading={isLoading}
+            error={villageError}
+            onRetry={handleRetry}
+            onVillageClick={handleVillageClick}
+            showDetails={true}
+          />
+        )}
+
+        {viewMode === 'table' && !isLoading && !villageError && (
+          <VillageTable
+            data={displayedVillages}
+            onVillageSelect={handleVillageClick}
+            onExport={handleExport}
+          />
+        )}
+
+        {viewMode === 'table' && isLoading && (
+          <div className="flex items-center justify-center p-8">
+            <LoadingSpinner size="lg" message="กำลังโหลดข้อมูล..." />
+          </div>
+        )}
+
+        {viewMode === 'table' && villageError && (
+          <div className="flex flex-col items-center justify-center p-8 space-y-4">
+            <div className="rounded-lg bg-red-50 p-4 text-sm text-red-800 border border-red-200">
+              {villageError.message}
+            </div>
+            <button
+              onClick={handleRetry}
+              className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            >
+              ลองอีกครั้ง
+            </button>
+          </div>
+        )}
+
+        {viewMode === 'comparison' && (
+          <ComparisonView
+            villages={comparisonVillages}
+            onRemove={handleRemoveFromComparison}
+            onClear={clearComparisonSelection}
+          />
+        )}
+
+        {/* Village selection hint for comparison mode */}
+        {viewMode !== 'comparison' && selectedForComparison.size === 0 && (
+          <div className="mt-4 text-center text-sm text-gray-500">
+            💡 เคล็ดลับ: เปลี่ยนเป็นมุมมองตารางเพื่อเลือกหมู่บ้านสำหรับเปรียบเทียบ
+          </div>
+        )}
 
         {/* Selected village detail */}
         {selectedVillage && (
-          <div className="mt-6 rounded-lg border border-gray-200 bg-white p-4">
-            <div className="flex justify-between items-start mb-4">
-              <h2 className="text-lg font-semibold">
-                {selectedVillage.village.villageName}
-              </h2>
-              <button
-                onClick={() => setSelectedVillage(null)}
-                className="text-gray-500 hover:text-gray-700"
-              >
-                ปิด
-              </button>
-            </div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-              <div>
-                <p className="text-gray-500">หมู่</p>
-                <p className="font-medium">{selectedVillage.village.villageMoo}</p>
-              </div>
-              <div>
-                <p className="text-gray-500">ประชากร</p>
-                <p className="font-medium">{selectedVillage.village.totalPopulation}</p>
-              </div>
-              <div>
-                <p className="text-gray-500">ครัวเรือน</p>
-                <p className="font-medium">{selectedVillage.village.householdCount}</p>
-              </div>
-              <div>
-                <p className="text-gray-500">โรคเรื้อรัง</p>
-                <p className="font-medium">
-                  {selectedVillage.diseases.reduce((sum, d) => sum + d.patientCount, 0)} คน
-                </p>
-              </div>
-            </div>
+          <div className="mt-6">
+            <VillageDetail
+              data={selectedVillage}
+              defaultExpanded={true}
+            />
           </div>
         )}
       </main>

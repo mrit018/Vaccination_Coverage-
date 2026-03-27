@@ -141,8 +141,8 @@ This is a web application using the repository root structure:
 - [X] T047 [P] [US3] Implement filtering functionality in VillageTable component (filter by disease type, min screening coverage, population range)
 - [X] T048 [P] [US3] Add sort indicators to VillageTable columns (show current sort field and direction)
 - [X] T049 [US3] Create ComparisonView component in src/components/village/ComparisonView.tsx (side-by-side comparison of selected villages)
-- [ ] T050 [US3] Add village selection mechanism (checkboxes/multi-select) in VillageList and VillageTable
-- [ ] T051 [US3] Implement comparison mode toggle in VillageHealthDashboard page (switches between list and comparison views)
+- [X] T050 [US3] Add village selection mechanism (checkboxes/multi-select) in VillageList and VillageTable
+- [X] T051 [US3] Implement comparison mode toggle in VillageHealthDashboard page (switches between list and comparison views)
 - [X] T052 [US3] Add export functionality in src/utils/villageExport.ts (export village health summary to CSV/PDF)
 - [X] T053 [US3] Add print-friendly styling for village health reports
 
